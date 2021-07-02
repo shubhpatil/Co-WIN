@@ -2,9 +2,10 @@ import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { lighten, makeStyles } from "@material-ui/core/styles";
-import { Table,
+import {
+  Table,
   TableBody,
-  TableCell, 
+  TableCell,
   TableContainer,
   TableHead,
   TablePagination,
@@ -16,10 +17,10 @@ import { Table,
   Checkbox,
   TextField,
   Tooltip,
-  IconButton
+  IconButton,
 } from "@material-ui/core";
 import { FilterList } from "@material-ui/icons";
-import calendarPic from '../Assets/calendar.png';
+import calendarPic from "../Assets/calendar.png";
 import Axios from "axios";
 
 function descendingComparator(a, b, orderBy) {
@@ -53,7 +54,12 @@ const headCells = [
   { id: "center_id", numeric: false, disablePadding: true, label: "Center ID" },
   { id: "name", numeric: false, disablePadding: true, label: "Hospital" },
   { id: "vaccine", numeric: false, disablePadding: true, label: "Vaccine" },
-  { id: "available_capacity", numeric: false, disablePadding: true, label: "Capacity" },
+  {
+    id: "available_capacity",
+    numeric: false,
+    disablePadding: true,
+    label: "Capacity",
+  },
   { id: "min_age_limit", numeric: false, disablePadding: true, label: "Age" },
   { id: "fee_type", numeric: false, disablePadding: true, label: "Type" },
   { id: "fee", numeric: false, disablePadding: true, label: "Fee" },
@@ -145,7 +151,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
-  const { 
+  const {
     numSelected,
     Sessions,
     // selectedSession,
@@ -154,39 +160,50 @@ const EnhancedTableToolbar = (props) => {
     SetVaccine,
     SetAge,
     SetFeeType,
-    ResetFilter
+    ResetFilter,
   } = props;
 
   const _formatDate = async (value) => {
     let date = "";
-    date = `${value.substring(8, 10)}-${value.substring(5, 7)}-${value.substring(0, 4)}`
+    date = `${value.substring(8, 10)}-${value.substring(
+      5,
+      7
+    )}-${value.substring(0, 4)}`;
     SetDay(date);
   };
 
   const _filterVaccine = (value) => {
-    let filter = Sessions.filter(session => session.vaccine === value)
+    let filter = Sessions.filter((session) => session.vaccine === value);
     SetVaccine(filter);
-  }
+  };
 
   const _filterAge = (value) => {
-    let filter = Sessions.filter(session => session.min_age_limit === value)
+    let filter = Sessions.filter((session) => session.min_age_limit === value);
     SetAge(filter);
-  }
+  };
 
   const _filterFeeType = (value) => {
-    let filter = Sessions.filter(session => session.fee_type === value)
+    let filter = Sessions.filter((session) => session.fee_type === value);
     SetFeeType(filter);
-  }
+  };
 
   return (
     <>
+      <Typography
+        className="text-center d-md-none"
+        variant="h6"
+        id="tableTitle"
+        component="div"
+      >
+        COVID Vacination
+      </Typography>
       <Toolbar
-        className={clsx(classes.root, {
+        className={`${clsx(classes.root, {
           [classes.highlight]: numSelected > 0,
-        })}
+        })} justify-content-between`}
       >
         <Typography
-          className={classes.title}
+          className={`${classes.title} d-none d-md-block`}
           color="inherit"
           variant="subtitle1"
           component="div"
@@ -195,12 +212,12 @@ const EnhancedTableToolbar = (props) => {
         </Typography>
 
         <Typography
-          className={classes.title}
+          className={`${classes.title} d-none d-md-block`}
           variant="h6"
           id="tableTitle"
           component="div"
         >
-          COVID Vacination
+          COVID Vaccination
         </Typography>
         <TextField
           label="Postal Code"
@@ -232,53 +249,45 @@ const EnhancedTableToolbar = (props) => {
             <FilterList />
           </IconButton>
         </Tooltip>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <small
-            class="dropdown-item"
+        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <small
+            className="dropdown-item"
             style={{ cursor: "pointer" }}
             onClick={ResetFilter}
           >
             Reset Filter
           </small>
           <small
-            class="dropdown-item"
-            style={{ cursor: "pointer" }}
-            onClick={()=>_filterVaccine("COVAXIN")}
+            className="dropdown-item point"
+            onClick={() => _filterVaccine("COVAXIN")}
           >
             COVAXIN
           </small>
           <small
-            class="dropdown-item"
-            style={{ cursor: "pointer" }}
-            onClick={()=>_filterVaccine("COVISHIELD")}
+            className="dropdown-item point"
+            onClick={() => _filterVaccine("COVISHIELD")}
           >
             COVISHIELD
           </small>
-          <small
-            class="dropdown-item"
-            style={{ cursor: "pointer" }}
-            onClick={()=>_filterAge(18)}
-          >
+          <small className="dropdown-item point" onClick={() => _filterAge(18)}>
             Age: 18+
           </small>
           <small
-            class="dropdown-item"
+            className="dropdown-item point"
             style={{ cursor: "pointer" }}
-            onClick={()=>_filterAge(45)}
+            onClick={() => _filterAge(45)}
           >
             Age: 45+
           </small>
           <small
-            class="dropdown-item"
-            style={{ cursor: "pointer" }}
-            onClick={()=>_filterFeeType("Paid")}
+            className="dropdown-item point"
+            onClick={() => _filterFeeType("Paid")}
           >
             Fee: PAID
           </small>
           <small
-            class="dropdown-item"
-            style={{ cursor: "pointer" }}
-            onClick={()=>_filterFeeType("Free")}
+            className="dropdown-item point"
+            onClick={() => _filterFeeType("Free")}
           >
             Fee: FREE
           </small>
@@ -335,13 +344,13 @@ export default function EnhancedTable() {
   }, [postalCode, day]);
 
   const _initialFunction = async (code, date) => {
-    if(code.length !== 6 || date === ""){
+    if (code.length !== 6 || date === "") {
       return;
     }
     let { data } = await Axios.get(
       `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByPin?pincode=${code}&date=${date}`
     );
-    let sessions = data.sessions.map((x, index)=> ({...x, id: index+1}));
+    let sessions = data.sessions.map((x, index) => ({ ...x, id: index + 1 }));
     console.log(sessions);
     setRows(sessions);
     setAllData(sessions);
@@ -349,15 +358,15 @@ export default function EnhancedTable() {
 
   const _setVaccine = (data) => {
     setRows(data);
-  }
+  };
 
   const _setAge = (data) => {
     setRows(data);
-  }
+  };
 
   const _setFeeType = (data) => {
     setRows(data);
-  }
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -409,22 +418,20 @@ export default function EnhancedTable() {
   //   rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
-  
-      
-      <div className={classes.root}>
-        <Paper className={classes.paper}>
-          <EnhancedTableToolbar
-            Sessions={AllData}
-            selectedSession={selected}
-            numSelected={selected.length}
-            SetPostalCode={setPostalCode}
-            SetDay={setDay}
-            SetVaccine={_setVaccine}
-            SetAge={_setAge}
-            SetFeeType={_setFeeType}
-            ResetFilter={()=>setRows(AllData)}
-          />
-          { rows.length > 0 ? (
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
+        <EnhancedTableToolbar
+          Sessions={AllData}
+          selectedSession={selected}
+          numSelected={selected.length}
+          SetPostalCode={setPostalCode}
+          SetDay={setDay}
+          SetVaccine={_setVaccine}
+          SetAge={_setAge}
+          SetFeeType={_setFeeType}
+          ResetFilter={() => setRows(AllData)}
+        />
+        {rows.length > 0 ? (
           <TableContainer>
             <Table
               className={classes.table}
@@ -477,9 +484,7 @@ export default function EnhancedTable() {
                         </TableCell>
                         <TableCell align="left">{row.center_id}</TableCell>
                         <TableCell align="left">{row.name}</TableCell>
-                        <TableCell align="left">
-                          {row.vaccine}
-                        </TableCell>
+                        <TableCell align="left">{row.vaccine}</TableCell>
                         <TableCell align="left">
                           {row.available_capacity}
                         </TableCell>
@@ -492,14 +497,20 @@ export default function EnhancedTable() {
               </TableBody>
             </Table>
           </TableContainer>
-          ) : (
-            <div className="text-center my-5">
-              <img className="img-fluid w-25" src={calendarPic} alt={"calendar"} />
-              <h3 className="font-weight-light">Please Enter Postal Code & Date Above</h3>
-            </div>
-          )}
-          { rows.length > 0 && (
-            <TablePagination
+        ) : (
+          <div className="text-center">
+            <img
+              className="img-fluid w-50"
+              src={calendarPic}
+              alt={"calendar"}
+            />
+            <h1 className="font-weight-light" style={{ fontSize: "4vw" }}>
+              Please Enter Postal Code & Date Above
+            </h1>
+          </div>
+        )}
+        {rows.length > 0 && (
+          <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
             count={rows.length}
@@ -508,8 +519,8 @@ export default function EnhancedTable() {
             onChangePage={handleChangePage}
             onChangeRowsPerPage={handleChangeRowsPerPage}
           />
-          )}
-        </Paper>
-      </div>
+        )}
+      </Paper>
+    </div>
   );
 }
