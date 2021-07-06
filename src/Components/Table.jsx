@@ -216,6 +216,7 @@ const EnhancedTableToolbar = (props) => {
           variant="h6"
           id="tableTitle"
           component="div"
+          style={{ color: "#f50057" }}
         >
           COVID Vaccination
         </Typography>
